@@ -1,0 +1,37 @@
+name: SonarQube Cloud Scan
+description: >
+  Scan your code with SonarQube Cloud to detect coding issues in 30+ 
+  languages. (Formerly SonarCloud)
+branding:
+  icon: check
+  color: green
+inputs:
+  args:
+    description: Additional arguments to the Sonar Scanner CLI
+    required: false
+  projectBaseDir:
+    description: Set the sonar.projectBaseDir analysis property
+    required: false
+  scannerVersion:
+    description: Version of the Sonar Scanner CLI to use
+    required: false
+    # to be kept in sync with the default version in the sonarqube-scan-action
+    default: 7.0.2.4839
+  scannerBinariesUrl:
+    description: URL to download the Sonar Scanner CLI binaries from
+    required: false
+    default: https://binaries.sonarsource.com/Distribution/sonar-scanner-cli
+runs:
+  using: "composite"
+  steps:
+    - name: Deprecation warning
+      shell: bash
+      run: |
+        echo "::warning title=SonarScanner::This action is deprecated and will be removed in a future release. Please use the sonarqube-scan-action action instead. The sonarqube-scan-action is a drop-in replacement for this action."
+    - name: SonarQube Cloud Scan
+      uses: SonarSource/sonarqube-scan-action@v5.0.0
+      with:
+        args: ${{ inputs.args }}
+        projectBaseDir: ${{ inputs.projectBaseDir }}
+        scannerVersion: ${{ inputs.scannerVersion }}
+        scannerBinariesUrl: ${{ inputs.scannerBinariesUrl }}
